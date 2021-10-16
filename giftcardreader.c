@@ -10,7 +10,7 @@
 #include "giftcard.h"
 
 #include <stdio.h>
-#include <strings.h>
+#include <string.h>
 
 // interpreter for THX-1138 assembly
 void animate(char *msg, unsigned char *program) {
@@ -65,7 +65,22 @@ void animate(char *msg, unsigned char *program) {
 done:
     return;
 }
+int get_gift_card_value(struct this_gift_card *thisone) {
+	struct gift_card_data *gcd_ptr;
+	struct gift_card_record_data *gcrd_ptr;
+	struct gift_card_amount_change *gcac_ptr;
+	int ret_count = 0;
 
+	gcd_ptr = thisone->gift_card_data;
+	for(int i=0;i<gcd_ptr->number_of_gift_card_records; i++) {
+  		gcrd_ptr = (struct gift_card_record_data *) gcd_ptr->gift_card_record_data[i];
+		if (gcrd_ptr->type_of_record == 1) {
+			gcac_ptr = gcrd_ptr->actual_record;
+			ret_count += gcac_ptr->amount_added;
+		}	
+	}
+	return ret_count;
+}
 void print_gift_card_info(struct this_gift_card *thisone) {
 	struct gift_card_data *gcd_ptr;
 	struct gift_card_record_data *gcrd_ptr;
@@ -151,22 +166,7 @@ void gift_card_json(struct this_gift_card *thisone) {
     printf("}\n");
 }
 
-int get_gift_card_value(struct this_gift_card *thisone) {
-	struct gift_card_data *gcd_ptr;
-	struct gift_card_record_data *gcrd_ptr;
-	struct gift_card_amount_change *gcac_ptr;
-	int ret_count = 0;
 
-	gcd_ptr = thisone->gift_card_data;
-	for(int i=0;i<gcd_ptr->number_of_gift_card_records; i++) {
-  		gcrd_ptr = (struct gift_card_record_data *) gcd_ptr->gift_card_record_data[i];
-		if (gcrd_ptr->type_of_record == 1) {
-			gcac_ptr = gcrd_ptr->actual_record;
-			ret_count += gcac_ptr->amount_added;
-		}	
-	}
-	return ret_count;
-}
 
 
 
@@ -257,13 +257,13 @@ struct this_gift_card *gift_card_reader(FILE *input_fd) {
 }
 
 // BDG: why not a local variable here?
-struct this_gift_card *thisone;
-
-int main(int argc, char **argv) {
+struct this_gift_card *thisone; 
+int main(int argc, char **argv){ 
     // BDG: no argument checking?
 	FILE *input_fd = fopen(argv[2],"r");
 	thisone = gift_card_reader(input_fd);
 	if (argv[1][0] == '1') print_gift_card_info(thisone);
     else if (argv[1][0] == '2') gift_card_json(thisone);
-
 	return 0;
+   
+}
