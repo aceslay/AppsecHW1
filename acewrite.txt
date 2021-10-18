@@ -1,0 +1,15 @@
+ Crash1.gft
+
+
+While testing the giftcardreader file and the example gft gile. The first character of the file looked a bit strange when read. There seemed to be a letter t in the front of the giftcard title even though it wasnt labeled. While testing out the code in gdb the t references the integer 116. Which is set in the giftcardexamplewriter file as num_byte. In the giftcardreader file it seems the 116 integer is used to define the memory allocation needed for fread to read within the file boundaries. In the giftcardreader file allocating memory for malloc is being set by num_bytes. If we replace the 116 integer to -1 and create a gft file that outputs a missing character which represents -1 in the gft file. The giftcardreader file will read the gft file when the -1 formatted data was stored. It will be used to allocate memory for a file to be within fread passing in a variable. In the argument num_byte will be casted size_t, is an unsigned integer. It will make any value with a negative change to a higher number that the value type can store inside. Out of bounds will be read by fread which is an access violation expected by filesize. \
+\
+Hang.gft\
+\
+By changing examplegcd.number_of_gift_card_records = 1 to examplegcd.number_of_gift_card_records to 3 it prompts a different if condition that calls in a different function call animate. Animate has a while loop that can cause the program to hang. In case 0x09 increment memory is kept until it passes memory to +256 location of the program. The biggest problem is that the case is passed as a signed character. If we set a bit in front of the binary data for a signed character, it would be read as negative. At the end of the while loop the program will go up to 3 memory locations of its type. \
+It could go back by moving 3 memory locations down using a negative bit for a signed character. To pass 253 programs for args and pass -3 will cause the program to 3 down, but at the end of the loop it goes up 3 which causes the program to run forever. To resolve this issue change pc+=(char)arg1 to an unsigned char work because unsigned type will not accept negative numbers.
+
+\
+\
+Crash2.gft\
+In the giftcardreader file allocating memory for malloc is being set by num_bytes. If we replace the 116 integer to -116 and create a gft file that outputs a missing character which represents -116 in the gft file. The giftcardreader file will read the gft file when the -116 formatted data was stored. It will be used to allocate memory for a file to be within fread passing in a variable. In the argument num_byte will be casted size_t, is an unsigned integer. It will make any value with a negative change to a higher number that the value type can store inside. Out of bounds will be read by fread which is an access violation expected by filesize. \
+\
