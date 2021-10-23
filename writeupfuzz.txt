@@ -1,9 +1,0 @@
-|fuzzer1.gft 
-
-I used afl-fuzz to create test cases for the giftcardreader program and I got a lot of hangs. I received a lot of false positives while running the program. I used gdb it seems like the hang happened in a different case statement than the hang.gft crash I created. I fixed the issue by adding a unsigned character. There was a file that had a negative value as well which caused the file to hang when a variable was incremented by another. By changing to char an unsigned char resolved the issue of not allowing negative values within the address space. 
-
-
-
-Fuzzer2.gft
-
-There was a test case that caused an access violation crash. The crash is located in the void print_gift_card_info an int function int get_gift_card_value while using gdb. I tried many different options by returning null on empty data but it didn’t work. I also attempted not using the int get_gift_card_value and made an increment value to replace the function within the print_gift_card_info option. That also didn’t work. While looking into it further it seems that all the data in the gft file was printed correctly but at the end of the file there is a segmentation fault. A possible option can be that a variable is trying to access outside memory causing the program OS to return a violation access error. I did further analysis of the problem using gdb and printif functions. The access violation problems was caused by pc’s variable function that called for both json print information and print info. The error was caused when the pc was going through the while loop. Changed the setting in the pc to 0 before the animate function occurred to resolve the issue. 
