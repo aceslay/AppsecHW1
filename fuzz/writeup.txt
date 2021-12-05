@@ -1,4 +1,4 @@
-|fuzzer1.gft 
+fuzzer1.gft 
 
 I used afl-fuzz to create test cases for the giftcardreader program and I got a lot of hangs. I received a lot of false positives while running the program. I used gdb it seems like the hang happened in a different case statement than the hang.gft crash I created. I fixed the issue by adding a unsigned character. There was a file that had a negative value as well which caused the file to hang when a variable was incremented by another. By changing to char an unsigned char resolved the issue of not allowing negative values within the address space. 
 
